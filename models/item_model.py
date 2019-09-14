@@ -1,4 +1,3 @@
-import sqlite3
 from alchemy_db import db
 
 class ItemModel(db.Model):
@@ -15,27 +14,12 @@ class ItemModel(db.Model):
 
     @classmethod
     def find_by_name(cls, name):
-        conn = sqlite3.connect('data.db')
-        cursor = conn.cursor()
-        query = 'SELECT * FROM ITEMS WHERE name = ?'
-        result = cursor.execute(query, (name,))
-        row = result.fetchone()
-        conn.close()
-        if row:
-            return cls(*row)
+        return cls.query.filterby(name=name).first()
 
-    def insert(self):
-        conn = sqlite3.connect('data.db')
-        cursor = conn.cursor()
-        insert_query = 'INSERT INTO ITEMS VALUES(?, ?)'
-        cursor.execute(insert_query, (self.name, self.price))
-        conn.commit()
-        conn.close()
+    def save_to_db(self):
+        db.session.add(self)
+        db.session.commit()
 
-    def update(self):
-        conn = sqlite3.connect('data.db')
-        cursor = conn.cursor()
-        update_query = 'UPDATE ITEMS SET price=? WHERE name=?'
-        cursor.execute(update_query, (self.price, self.name))
-        conn.commit()
-        conn.close()
+    def delete_from_db(self):
+        db.session.delete(self)
+        db.session.commit()

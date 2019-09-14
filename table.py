@@ -7,7 +7,7 @@ cursor = conn.cursor()
 create_query = 'CREATE TABLE IF NOT EXISTS USERS(id INTEGER PRIMARY KEY, username text, password text)'
 cursor.execute(create_query)
 
-create_query = 'CREATE TABLE IF NOT EXISTS ITEMS(name text, price real)'
+create_query = 'CREATE TABLE IF NOT EXISTS ITEMS(id INTEGER PRIMARY KEY, name text, price real)'
 cursor.execute(create_query)
 
 conn.commit()
