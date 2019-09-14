@@ -7,37 +7,19 @@ class UserModel(db.Model):
     username = db.Column(db.String(60))
     password = db.Column(db.String(60))
 
-    def __init__(self, _id, username, password):
+    def __init__(self, username, password):
         self.id = _id
         self.username = username
         self.password = password
 
+    def save_to_db(self):
+        db.session.add(self)
+        db.session.commit()
+
     @classmethod
     def find_by_username(cls, username):
-        conn = sqlite3.connect('data.db')
-        cursor = conn.cursor()
-        select_query = 'SELECT * FROM USERS WHERE username = ?'
-        result = cursor.execute(select_query, (username,))
-        row = result.fetchone()
-        if row:
-            user = cls(*row)
-        else:
-            user = None
-
-        conn.close()
-        return user
+        return cls.query.filter_by(username=username).first()
 
     @classmethod
     def find_by_id(cls, _id):
-        conn = sqlite3.connect('data.db')
-        cursor = conn.cursor()
-        select_query = 'SELECT * FROM USERS WHERE id = ?'
-        result = cursor.execute(select_query, (_id,))
-        row = result.fetchone()
-        if row:
-            user = cls(*row)
-        else:
-            user = None
-
-        conn.close()
-        return user
+        return cls.query.filter_by(id=_id).first()

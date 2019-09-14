@@ -1,5 +1,4 @@
 from models.user_model import UserModel
-users = [ UserModel(1, 'Bob', 'asdf')]
 
 
 def authenticate(username, password):
