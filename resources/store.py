@@ -20,14 +20,13 @@ class Store(Resource):
 
     def delete(self, name):
         store = StoreModel.find_by_name(name)
-        if store is None:
-            return {'message':'Store with "{}" does not exist'.format(name)}, 400
-        store = StoreModel(name)
-        try:
-            store.delete_from_db()
-        except:
-            return {'message':'An error occured while deleting a store'}, 500
-        return {'message':'Store deleted'}
+        if store:
+            try:
+                store.delete_from_db()
+            except:
+                return {'message':'Error occured while deleting the store'}, 500
+        return {'message':'Item deleted'}
+
 
 class StoreList(Resource):
     def get(self):
