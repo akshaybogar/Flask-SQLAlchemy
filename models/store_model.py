@@ -1,20 +1,17 @@
 from alchemy_db import db
 
-class ItemModel(db.Model):
-    __tablename__ = 'ITEMS'
+class StoreModel(db.Model):
+    __tablename__ = 'STORES'
     id = db.Column(db.Integer, primary_key = True)
     name = db.Column(db.String(60))
-    price = db.Column(db.Float(precision=2))
-    store_id = db.Column(db.Integer, db.ForeignKey('STORES.id'))
-    store = db.relationship(StoreModel)
 
-    def __init__(self, name, price, store_id):
+    items = db.relationship(ItemModel, lazy='dynamic')
+
+    def __init__(self, name):
         self.name = name
-        self.price = price
-        self.store_id = store_id
 
     def json(self):
-        return {'name':self.name, 'price':self.price, 'store_id':self.store_id}
+        return {'name':self.name, 'items':[item.json() for item in self.items.all()]}
 
     @classmethod
     def find_by_name(cls, name):

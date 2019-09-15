@@ -9,6 +9,10 @@ class Item(Resource):
     type = float,
     required = True,
     help = 'Enter price of the item')
+    request_parser.add_argument('store_id',
+    type = int,
+    required = True,
+    help = 'Every item needs a store id')
 
     @jwt_required()
     def get(self,name):
@@ -22,7 +26,7 @@ class Item(Resource):
             return {'message':'Item with {} name already exists'.format(name)}, 400
 
         data = Item.request_parser.parse_args()
-        item = ItemModel(name, data['price'])
+        item = ItemModel(name, data['price'], data['store_id'])
         try:
             item.save_to_db()
         except:
@@ -40,7 +44,7 @@ class Item(Resource):
         data = Item.request_parser.parse_args()
         item = ItemModel.find_by_name(name)
         if item is None:
-            item = ItemModel(name, data['price'])
+            item = ItemModel(name, data['price'], data['store_id'])
         else:
             item.price = data['price']
         try:
