@@ -19,7 +19,7 @@ class Store(Resource):
         return store.json(), 201
 
     def delete(self, name):
-        store = StoreModel.find_by_name(name):
+        store = StoreModel.find_by_name(name)
         if store is None:
             return {'message':'Store with "{}" does not exist'.format(name)}, 400
         store = StoreModel(name)
